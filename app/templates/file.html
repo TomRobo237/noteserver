@@ -1,0 +1,10 @@
+{% extends "browser.html" %}
+{% block topline_items %}
+<li class="active"><a href="/index/">Home</a></li>
+<li class="active"><a href="/browser/">File Browser</a></li>
+<li class="active"><a href="/mdtojira">Markdown to Jira</a></li>
+<li class="active"><a href="/mdtojira/notes/{{ titlebar }}">Jiraize this file</a></li>
+{% endblock %}
+{% block content %}
+{{ markdown|safe }}
+{% endblock %}

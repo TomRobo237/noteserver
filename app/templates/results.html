@@ -1,0 +1,13 @@
+{% extends "browser.html"%}
+
+{% block content %}
+    <h2>Search Results for "{{ query }}": </h2>
+    {% if results %}
+        {% for title, result in results.items() %}
+            <h3><a href="{{ result['link'] }}">{{ result['title'] }}</a></h3>
+            {{ result['context'].replace('\n', '<br/>')|safe }}
+        {% endfor %}
+    {% else %}
+        <h3>No results!</h3>
+    {% endif %}
+{% endblock %}

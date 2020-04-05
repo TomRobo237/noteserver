@@ -1,0 +1,71 @@
+{% extends "main.html" %}
+
+{% block search %}
+    <style>
+        .input-container {
+          width: 100%;
+          clear: both;
+        }
+
+        .input-container input {
+          width: 100%;
+          clear: both;
+        }
+    </style>
+    <div class="input-container">
+        <form id="searchbar" method="get" action="/search.html">
+            <label>Context Search:</label>
+            <input id="full-search-input" class="search-input" name="q"/>
+        </form>
+        <label>Search Filenames in Tree:</label>
+        <input id="js-tree-search-input" class="search-input" />
+    </div>
+    <script>
+        $(function () {
+            $("#full-search-input".keyup(function (event) {
+                if (event.which === 13) {
+                    document.searchbar.submit();
+                }
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block sidebar%}
+<link rel="stylesheet" href="{{ url_for('static', filename='jstree/themes/default/style.css') }}" />
+<script src="{{ url_for('static', filename='jstree/jstree.min.js') }}"></script>
+<script>
+
+    var arrayCollection = {{ jstree | safe }}
+    $(function() {
+        $('#jstree').jstree({
+            'core': {
+                'data': arrayCollection,
+            },
+            'plugins': ['search'],
+            'search': {
+                'case_sensitive': false,
+                'show_only_matches': true
+            }
+        });
+
+        $('#jstree').bind('select_node.jstree', function(e,data) {
+            console.log(data)
+            if (data.node.a_attr.href != '#') {
+                window.open(data.node.a_attr.href, "_self")
+            } else {
+                $('#jstree').jstree("open_node", data.node.id)
+            }
+        });
+
+        $(document).ready( function () {
+            $("#js-tree-search-input").keyup(function () {
+                var searchString = $(this).val();
+                $('#jstree').jstree('search', searchString);
+            });
+        });
+
+    });
+</script>
+<div id="jstree"></div>
+{% endblock %}

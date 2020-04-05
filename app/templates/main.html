@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css')}}"/>
+        <!-- Including JSQuery -->
+        <script src="{{ url_for('static', filename='jquery-3.4.1.js') }}"></script>
+        <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js')}}"></script>
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/code.css')}}"/>
+    </head>
+    <body>
+        {% block topline %}
+            <div class="navbar navbar-inverse navbar-fixed-top">
+              <div class="navbar-inner">
+                <div class="container-fluid">
+                  <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                  <a class="brand" href="#">{{ titlebar }}</a>
+                  <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        {% block topline_items %}
+                          <li class="active"><a href="/index/">Home</a></li>
+                          <li class="active"><a href="/browser/">File Browser</a></li>
+                          <li class="active"><a href="/mdtojira">Markdown to Jira</a></li>
+                        {% endblock %}
+                    </ul>
+                  </div><!--/.nav-collapse -->
+                </div>
+              </div>
+            </div>
+        {% endblock %}
+        <br/><br/>
+        <div class="container-fluid">
+        <div class="row-fluid">
+          <div class="span3">
+            <div class="well sidebar-nav" id="sidemenu">
+              <ul class="nav nav-list">
+                  {% block search %}{% endblock %}
+                <li class="nav-header">File Navigation</li>
+                <li class="active"><a href="#">Browser</a></li>
+                <li>{% block sidebar %}{% endblock %}</li>
+              </ul>
+            </div><!--/.well -->
+          </div><!--/span-->
+          <div class="span9">
+            <div>
+              {% block content %}
+              {% endblock %}
+            </div>
+          </div><!--/row-->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        {% block footer %}
+          <p>Tom Miller :)</p>
+        {% endblock %}
+      </footer>
+
+
+
+
+    </body>
+</html>
