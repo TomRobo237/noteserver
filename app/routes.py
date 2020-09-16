@@ -3,21 +3,8 @@ from json import dumps
 
 from flask import render_template, url_for, request, redirect
 from markdown import markdown
-import feedparser
 
 from app import app
-
-# Monkey Patching SSL cert verification for feedparser
-import ssl
-try:
-    _create_unverified_https_context = ssl._create_unverified_context
-except AttributeError:
-    # Legacy Python that doesn't verify HTTPS certificates by default
-    pass
-else:
-    # Handle target environment that doesn't support HTTPS verification
-    ssl._create_default_https_context = _create_unverified_https_context
-# End Monkey patch
 
 APP_ROOT, _ = path.split(path.abspath(__file__))
 FS_ROOT, _ = path.split(path.abspath(APP_ROOT))
@@ -63,7 +50,7 @@ def search(search_string, item=NOTES, parent='/'):
                     else:
                         result['context'] = ''.join(raw[lineno - 1:lineno + 2])
                     return {result['title']: result}
-        except IOError:
+        except (IOError, UnicodeDecodeError):
             pass
     return ret
 
@@ -89,8 +76,8 @@ def display_notes(urlFilePath):
         with open(filename) as fp:
             content = markdown(fp.read(), extensions=['fenced_code', 'codehilite'])
         return render_template("file.html", markdown=content, titlebar=urlFilePath, jstree=jstree, title=urlFilePath)
-    except FileNotFoundError:
-        return render_template('error.html', errorpage=filename)
+    except (FileNotFoundError, UnicodeDecodeError, IOError) as e:
+        return render_template('error.html', errorpage=filename, error=e)
 
 
 @app.route('/mdtojira')
